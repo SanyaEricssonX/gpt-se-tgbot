@@ -1,28 +1,9 @@
 import { openai } from './openai.js'
 
+const MAX_CONVERSATION_LENGTH = 9
+
 export const INITIAL_SESSION = {
   messages: [],
-}
-
-export async function initCommandDelCtx(ctx) {
-  //сброс контекста
-  ctx.session = {
-    messages: [],
-  }
-  await ctx.reply('Контекст был сброшен успешно.')
-}
-
-export async function initCommandStart(ctx) {
-  await ctx.reply(`Рад приветствовать вас!
-Я - GPT SanyaEricssonX Edition.
-Я работаю как с текстовыми, так и с голосовыми сообщениями.
-  
-Список команд, которые
-могут вам пригодиться:
-/myprofile     - основная информация о вашем профиле
-/deletecontext - я забуду о чем мы говорили с вами ранее.
-
-Уже не терпится помочь вам - спрашивайте!`)
 }
 
 export async function processTextToChat(ctx, content) {
@@ -39,5 +20,15 @@ export async function processTextToChat(ctx, content) {
     await ctx.reply(response.content)
   } catch (e) {
     console.log('Ошибка при получении ответа от сервера OpenAI: ', e.message)
+  }
+}
+
+export async function removeContextLimit(ctx) {
+  ctx.session ??= INITIAL_SESSION
+  if (ctx.session.messages.length > MAX_CONVERSATION_LENGTH) {
+    ctx.session = {
+      messages: [],
+    }
+    ctx.reply('К сожалению мне пришлось сбросить контекст предыдущих сообщений по причине того, что был превышен лимит.')
   }
 }
