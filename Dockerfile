@@ -8,8 +8,12 @@ RUN npm ci
 
 COPY . .
 
+RUN npm install -g pm2
+
 ENV PORT=3000
 
 EXPOSE $PORT
 
-CMD ["npm", "start"]
+VOLUME [ "/app/data/logs" ]
+
+CMD ["pm2-runtime", "start", "pm2.config.json"]

@@ -5,7 +5,8 @@ import config from 'config'
 import { ogg } from './oggToMp3.js'
 import { removeFile } from './rmVoiceMsg.js'
 import { openai } from './openai.js'
-import { initCommandStart, initCommandDelCtx, processTextToChat, INITIAL_SESSION } from './response.js'
+import { initCommandStart, initCommandDelCtx, initCommandProfile } from './commands.js'
+import { processTextToChat, INITIAL_SESSION, removeContextLimit } from './response.js'
 
 console.log(config.get('TEST_ENV'))
 
@@ -18,12 +19,16 @@ bot.command('start', initCommandStart)
 
 bot.command('deletecontext', initCommandDelCtx)
 
+bot.command('profile', initCommandProfile)
+
 // Обработка текстовых сообщений, отправленных пользователем
 bot.on(message('text'), async (ctx) => {
   ctx.session ??= INITIAL_SESSION
   try {
-    await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
+    let tempmsg = await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
     await processTextToChat(ctx, ctx.message.text)
+    bot.telegram.deleteMessage(ctx.chat.id, tempmsg.message_id) // Удаляем временное сообщение
+    removeContextLimit(ctx)
   } catch (e) {
     console.log(`Ошибка сервера OpenAI при работе с текстовым сообщением пользователя: `, e.message)
   }
