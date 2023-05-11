@@ -1,3 +1,5 @@
+import { code } from 'telegraf/format'
+
 export async function initCommandStart(ctx) {
   await ctx.reply(`Рад приветствовать вас!
 Я - GPT SanyaEricssonX Edition.
@@ -5,8 +7,9 @@ export async function initCommandStart(ctx) {
   
 Список команд, которые
 могут вам пригодиться:
-/myprofile     - основная информация о вашем профиле
-/deletecontext - я забуду о чем мы говорили с вами ранее.
+/start - основная информация
+/profile - ваш профиль
+/deletecontext - сбросить контекст сообщений
 
 Уже не терпится помочь вам - спрашивайте!`)
 }
@@ -16,9 +19,9 @@ export async function initCommandDelCtx(ctx) {
   ctx.session = {
     messages: [],
   }
-  await ctx.reply('Контекст был сброшен успешно.')
+  await ctx.reply(code('Контекст был сброшен успешно.'))
 }
 
 export async function initCommandProfile(ctx) {
-  await ctx.reply('В разработке...')
+  await ctx.reply(code('В данный момент здесь нет ничего интересного, но скоро будет!'))
 }
