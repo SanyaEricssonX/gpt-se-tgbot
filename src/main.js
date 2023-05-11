@@ -38,7 +38,7 @@ bot.on(message('text'), async (ctx) => {
 bot.on(message('voice'), async (ctx) => {
   ctx.session ??= INITIAL_SESSION
   try {
-    await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
+    let tempmsg = await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
     const voiceMsgLink = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
     const userId = String(ctx.message.from.id)
     const oggPath = await ogg.create(voiceMsgLink.href, userId)
@@ -50,6 +50,8 @@ bot.on(message('voice'), async (ctx) => {
     await ctx.reply(code(`Ваше сообщение: ${text}`))
 
     await processTextToChat(ctx, text)
+    bot.telegram.deleteMessage(ctx.chat.id, tempmsg.message_id) // Удаляем временное сообщение
+    removeContextLimit(ctx)
   } catch (e) {
     console.log(`Ошибка сервера OpenAI при работе с голосовым сообщением пользователя: `, e.message)
   }

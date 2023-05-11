@@ -1,4 +1,5 @@
 import { openai } from './openai.js'
+import { code } from 'telegraf/format'
 
 const MAX_CONVERSATION_LENGTH = 9
 
@@ -29,6 +30,6 @@ export async function removeContextLimit(ctx) {
     ctx.session = {
       messages: [],
     }
-    ctx.reply('К сожалению мне пришлось сбросить контекст предыдущих сообщений по причине того, что был превышен лимит.')
+    ctx.reply(code('К сожалению мне пришлось сбросить контекст предыдущих сообщений по причине того, что был превышен лимит.'))
   }
 }
