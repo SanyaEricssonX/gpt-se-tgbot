@@ -2,7 +2,7 @@
   "apps": [{
     "name": "gpt-se-tgbot",
     "script": "./src/main.js",
-    "log_date_format": "YYYY-MM-DD HH:mm:ss [GMT]Z",
+    "log_date_format": "DD-MM-YYYY HH:mm:ss [GMT]Z",
     "out_file": "./data/logs/gpt-se-tgbot.log",
     "error_file": "./data/logs/gpt-se-tgbot.log"
   }]

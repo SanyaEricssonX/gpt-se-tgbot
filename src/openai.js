@@ -21,6 +21,10 @@ class OpenAI {
       const response = await this.openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
         messages,
+      },
+      {
+        timeout: 180000,
+        timeoutErrorMessage: 'Timeout error 180 000',
       })
       return response.data.choices[0].message
     } catch (e) {
