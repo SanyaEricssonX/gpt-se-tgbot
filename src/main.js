@@ -6,9 +6,9 @@ import { ogg } from './oggToMp3.js'
 import { removeFile } from './rmVoiceMsg.js'
 import { openai } from './openai.js'
 import { initCommandStart, initCommandDelCtx, initCommandProfile } from './commands.js'
-import { processTextToChat, INITIAL_SESSION, removeContextLimit } from './response.js'
+import { CURRENT_SESSION, processTextToChat, removeContextLimit } from './response.js'
 
-console.log(config.get('TEST_ENV'))
+console.log('Активирован режим:', config.get('TEST_ENV'))
 
 const bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
 
@@ -23,12 +23,13 @@ bot.command('profile', initCommandProfile)
 
 // Обработка текстовых сообщений, отправленных пользователем
 bot.on(message('text'), async (ctx) => {
-  ctx.session ??= INITIAL_SESSION
+  ctx.session ??= CURRENT_SESSION
   try {
     let tempmsg = await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
     await processTextToChat(ctx, ctx.message.text)
     bot.telegram.deleteMessage(ctx.chat.id, tempmsg.message_id) // Удаляем временное сообщение
     removeContextLimit(ctx)
+    await ctx.reply(code('Бот временно не работает. Закончились деньги на аккаунте OpenAI'))
   } catch (e) {
     console.log(`Ошибка сервера OpenAI при работе с текстовым сообщением пользователя: `, e.message)
   }
@@ -36,7 +37,7 @@ bot.on(message('text'), async (ctx) => {
 
 // Обработка голосовых сообщений, отправленных пользователем
 bot.on(message('voice'), async (ctx) => {
-  ctx.session ??= INITIAL_SESSION
+  ctx.session ??= CURRENT_SESSION
   try {
     let tempmsg = await ctx.reply(code('Отправляю ваш запрос на сервер, пожалуйста подождите'))
     const voiceMsgLink = await ctx.telegram.getFileLink(ctx.message.voice.file_id)

@@ -3,7 +3,7 @@ import { code } from 'telegraf/format'
 
 const MAX_CONVERSATION_LENGTH = 9
 
-export const INITIAL_SESSION = {
+export const CURRENT_SESSION = {
   messages: [],
 }
 
@@ -25,7 +25,7 @@ export async function processTextToChat(ctx, content) {
 }
 
 export async function removeContextLimit(ctx) {
-  ctx.session ??= INITIAL_SESSION
+  ctx.session ??= CURRENT_SESSION
   if (ctx.session.messages.length > MAX_CONVERSATION_LENGTH) {
     ctx.session = {
       messages: [],
