@@ -29,7 +29,7 @@ bot.on(message('text'), async (ctx) => {
     await processTextToChat(ctx, ctx.message.text)
     bot.telegram.deleteMessage(ctx.chat.id, tempmsg.message_id) // Удаляем временное сообщение
     removeContextLimit(ctx)
-    await ctx.reply(code('Бот временно не работает. Закончились деньги на аккаунте OpenAI'))
+    // await ctx.reply(code('Бот временно не работает'))
   } catch (e) {
     console.log(`Ошибка сервера OpenAI при работе с текстовым сообщением пользователя: `, e.message)
   }
